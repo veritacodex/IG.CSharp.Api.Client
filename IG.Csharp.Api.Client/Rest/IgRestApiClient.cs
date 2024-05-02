@@ -144,9 +144,9 @@ namespace IG.Csharp.Api.Client.Rest
             GetApiResponse<TradeConfirmResponse>(TRADE_CONFIRM_URI + $"/{dealReference}", "1");
         public WatchlistInstrumentsResponse GetInstrumentsByWatchlistId(string watchListId) =>
             GetApiResponse<WatchlistInstrumentsResponse>($"{WATCHLISTS_URI}/{watchListId}", "1");
-        public TransactionsResponse GetTransactions(DateTime start)
+        public TransactionsResponse GetTransactions(DateTime from)
         {
-            var uri = $"{TRANSACTIONS_URI}?from={start:yyyy-MM-dd}";
+            var uri = $"{TRANSACTIONS_URI}?from={from:yyyy-MM-dd}";
             return GetApiResponse<TransactionsResponse>(uri, "2");
         }
         public List<Transaction> GetTransactions(DateTime from, DateTime toEnd, TransactionType transactionType)
