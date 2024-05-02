@@ -14,8 +14,8 @@ namespace IG.Csharp.Api.Client.Rest
         AccountDetailsResponse GetAccounts();
         TradeConfirmResponse GetTradeConfirm(string dealReference);
         WatchlistInstrumentsResponse GetInstrumentsByWatchlistId(string watchListId);
-        TransactionsResponse GetTransactions(DateTime start);
-        List<Transaction> GetTransactions(DateTime startTime, DateTime endTime, TransactionType transactionType);
+        TransactionsResponse GetTransactions(DateTime from);
+        List<Transaction> GetTransactions(DateTime from, DateTime to, TransactionType transactionType);
         OpenPositionResponse OpenPosition(OpenPositionRequest request);
         OpenPositionResponse OpenMarketPosition(string epic, TradeSide side, double size);
         OpenPositionResponse OpenMarketTrailingPosition(string epic, TradeSide side, double size, double trailingStopIncrement, double stopDistance);
@@ -30,7 +30,7 @@ namespace IG.Csharp.Api.Client.Rest
         MarketDetailsResponse GetMarketDetails(string epic);
         SearchMarketResponse SearchMarkets(string searchTem);
         ActivitiesResponse GetActivities(DateTime from, bool detailed);
-        List<Price> GetHistoricalPrices(string epic, Resolution resolution, DateTime from, DateTime toEnd);
+        List<Price> GetHistoricalPrices(string epic, Resolution resolution, DateTime from, DateTime to);
 
         #region BackTesting
         void SetCurrentMarketData(Candle data);

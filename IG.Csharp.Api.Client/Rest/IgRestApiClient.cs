@@ -5,7 +5,6 @@ using IG.Csharp.Api.Client.Rest.Response;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -83,7 +82,7 @@ namespace IG.Csharp.Api.Client.Rest
             return _authenticationResponse;
         }
         private bool ShouldAuthenticate() => _authenticationResponse == null ||
-                (DateTime.Now - _authenticationResponse.Date).TotalHours >= 5;
+                (DateTime.UtcNow - _authenticationResponse.Date).TotalHours >= 5;
         private AuthenticationResponse GetAuthenticationResponseFromDisk()
         {
             try { return JsonConvert.DeserializeObject<AuthenticationResponse>(File.ReadAllText(_username + ".authenticationResponse.json")); }
@@ -145,17 +144,16 @@ namespace IG.Csharp.Api.Client.Rest
             GetApiResponse<TradeConfirmResponse>(TRADE_CONFIRM_URI + $"/{dealReference}", "1");
         public WatchlistInstrumentsResponse GetInstrumentsByWatchlistId(string watchListId) =>
             GetApiResponse<WatchlistInstrumentsResponse>($"{WATCHLISTS_URI}/{watchListId}", "1");
-        public TransactionsResponse GetTransactions(DateTime from)
+        public TransactionsResponse GetTransactions(DateTime start)
         {
-            var uri = $"{TRANSACTIONS_URI}?from={from:yyyy-MM-dd}";
+            var uri = $"{TRANSACTIONS_URI}?from={start:yyyy-MM-dd}";
             return GetApiResponse<TransactionsResponse>(uri, "2");
         }
-        public List<Transaction> GetTransactions(DateTime start, DateTime end, TransactionType transactionType)
+        public List<Transaction> GetTransactions(DateTime from, DateTime to, TransactionType transactionType)
         {
-            var uri = $"{TRANSACTIONS_URI}?type={transactionType}&from={ParseDateToIgFormat(start)}&to={ParseDateToIgFormat(end)}";
+            var uri = $"{TRANSACTIONS_URI}?type={transactionType}&from={ParseDateToIgFormat(from)}&to={ParseDateToIgFormat(to)}";
             var transactions = new List<Transaction>();
-            GetTransactions(transactions, uri, 1);
-            return transactions;
+            return GetTransactions(transactions, uri, 1);
         }
         private List<Transaction> GetTransactions(List<Transaction> transactions, string uri, int pageNumber)
         {
@@ -167,8 +165,8 @@ namespace IG.Csharp.Api.Client.Rest
                 GetTransactions(transactions, uri, response.MetaData.PageData.PageNumber + 1);
             return transactions;
         }
-        public ActivitiesResponse GetActivities(DateTime start, bool detailed) =>
-            GetApiResponse<ActivitiesResponse>($"{ACTIVITIES_URI}?from={start:yyyy-MM-dd}&detailed={detailed}", "3");
+        public ActivitiesResponse GetActivities(DateTime from, bool detailed) =>
+            GetApiResponse<ActivitiesResponse>($"{ACTIVITIES_URI}?from={from:yyyy-MM-dd}&detailed={detailed}", "3");
         public OpenPositionResponse OpenPosition(OpenPositionRequest request)
         {
             var content = JsonConvert.SerializeObject(request);
@@ -237,10 +235,10 @@ namespace IG.Csharp.Api.Client.Rest
         public SearchMarketResponse SearchMarkets(string searchTem) =>
             GetApiResponse<SearchMarketResponse>($"{MARKETS_URI}?searchTerm={WebUtility.UrlEncode(searchTem)}", "1");
 
-        public List<Price> GetHistoricalPrices(string epic, Resolution resolution, DateTime from, DateTime toEnd)
+        public List<Price> GetHistoricalPrices(string epic, Resolution resolution, DateTime from, DateTime to)
         {
             var startDate = ParseDateToIgFormat(from);
-            var endDate = ParseDateToIgFormat(toEnd);
+            var endDate = ParseDateToIgFormat(to);
             var uri = $"{PRICES_URI}/{epic}?resolution={resolution}&from={startDate}&to={endDate}";
             var prices = new List<Price>();
 
@@ -259,9 +257,9 @@ namespace IG.Csharp.Api.Client.Rest
             }
             return prices;
         }
-        public void SaveHistoricalDataToFile(string epic, Resolution resolution, DateTime start, DateTime end, string filePathToSave)
+        public void SaveHistoricalDataToFile(string epic, Resolution resolution, DateTime from, DateTime to, string filePathToSave)
         {
-            var prices = GetHistoricalPrices(epic, resolution, start, end);
+            var prices = GetHistoricalPrices(epic, resolution, from, to);
 
             File.WriteAllLines(filePathToSave,
                 prices.Select(x =>
