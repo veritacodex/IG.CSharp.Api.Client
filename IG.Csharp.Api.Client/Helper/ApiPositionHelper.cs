@@ -2,7 +2,6 @@
 using IG.Csharp.Api.Client.Rest.Response;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace IG.Csharp.Api.Client.Helper
@@ -16,14 +15,16 @@ namespace IG.Csharp.Api.Client.Helper
         }
         public static double? CalculatePL(OpenPosition openPosition)
         {
-            Contract.Requires(openPosition != null);
+            if (openPosition == null)
+                throw new NullReferenceException("open position is null");
 
             if (openPosition.Position.Direction == "BUY") return (openPosition.Market.Bid - openPosition.Position.Level) * openPosition.Position.Size;
             else return (openPosition.Position.Level - openPosition.Market.Offer) * openPosition.Position.Size;
         }
         public static void CalculatePL(PositionsResponse positionsResponse)
         {
-            Contract.Requires(positionsResponse != null);
+            if (positionsResponse == null)
+                throw new NullReferenceException("positionsResponse is null");
 
             positionsResponse.Positions.ForEach(openPosition =>
             {
@@ -32,15 +33,19 @@ namespace IG.Csharp.Api.Client.Helper
         }
         public static double? CalculatePL(OpenPosition openPosition, Streaming.Model.MarketData marketData)
         {
-            Contract.Requires(openPosition != null);
-            Contract.Requires(marketData != null);
+            if (openPosition == null)
+                throw new NullReferenceException("openPosition is null");
+
+            if (marketData == null)
+                throw new NullReferenceException("marketData is null");
 
             if (openPosition.Position.Direction == "BUY") return (marketData.Bid - openPosition.Position.Level) * openPosition.Position.Size;
             else return (openPosition.Position.Level - marketData.Offer) * openPosition.Position.Size;
         }
         public static void CalculatePL(List<OpenPosition> positions, Streaming.Model.MarketData marketData)
         {
-            Contract.Requires(positions != null);
+            if (positions == null)
+                throw new NullReferenceException("positions is null");
 
             positions.ForEach(position =>
             {
