@@ -17,32 +17,33 @@ namespace IG.Csharp.Api.Client.Streaming.Listener
 
         void SubscriptionListener.onClearSnapshot(string itemName, int itemPos)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         void SubscriptionListener.onCommandSecondLevelItemLostUpdates(int lostUpdates, string key)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         void SubscriptionListener.onCommandSecondLevelSubscriptionError(int code, string message, string key)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         void SubscriptionListener.onEndOfSnapshot(string itemName, int itemPos)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         void SubscriptionListener.onItemLostUpdates(string itemName, int itemPos, int lostUpdates)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         void SubscriptionListener.onItemUpdate(ItemUpdate itemUpdate)
         {
-            Contract.Requires(itemUpdate != null);
+             if (itemUpdate == null)
+                throw new ArgumentNullException(nameof(itemUpdate));
 
             var json = JsonConvert.SerializeObject(itemUpdate.Fields, Formatting.Indented);
             var marketData = JsonConvert.DeserializeObject<MarketData>(json);
@@ -68,12 +69,12 @@ namespace IG.Csharp.Api.Client.Streaming.Listener
 
         void SubscriptionListener.onSubscriptionError(int code, string message)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         void SubscriptionListener.onUnsubscription()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }
