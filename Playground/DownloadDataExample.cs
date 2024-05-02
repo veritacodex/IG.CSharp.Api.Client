@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 
 namespace Playground
 {
-
     public class DownloadDataExample
     {
         private readonly IgRestApiClient _igClient;
@@ -23,7 +22,8 @@ namespace Playground
         {
             var resolution = (Resolution)Enum.Parse(typeof(Resolution), "HOUR");
             var prices = _igClient.GetHistoricalPrices("CS.D.EURGBP.TODAY.IP", resolution,
-                new System.DateTime(2022, 02, 05), new System.DateTime(2022, 02, 10));
+                new DateTime(2022, 02, 05, 0, 0, 0, DateTimeKind.Utc), new DateTime(2022, 02, 10, 0, 0, 0, DateTimeKind.Utc));
+            Console.WriteLine(prices);
         }
     }
 }
