@@ -16,7 +16,7 @@ namespace IG.Csharp.Api.Client.Helper
         public static double? CalculatePL(OpenPosition openPosition)
         {
             if (openPosition == null)
-                throw new NullReferenceException("open position is null");
+                throw new ArgumentNullException(nameof(openPosition));
 
             if (openPosition.Position.Direction == "BUY") return (openPosition.Market.Bid - openPosition.Position.Level) * openPosition.Position.Size;
             else return (openPosition.Position.Level - openPosition.Market.Offer) * openPosition.Position.Size;
@@ -24,7 +24,7 @@ namespace IG.Csharp.Api.Client.Helper
         public static void CalculatePL(PositionsResponse positionsResponse)
         {
             if (positionsResponse == null)
-                throw new NullReferenceException("positionsResponse is null");
+                throw new ArgumentNullException(nameof(positionsResponse));
 
             positionsResponse.Positions.ForEach(openPosition =>
             {
@@ -34,10 +34,10 @@ namespace IG.Csharp.Api.Client.Helper
         public static double? CalculatePL(OpenPosition openPosition, Streaming.Model.MarketData marketData)
         {
             if (openPosition == null)
-                throw new NullReferenceException("openPosition is null");
+                throw new ArgumentNullException(nameof(openPosition));
 
             if (marketData == null)
-                throw new NullReferenceException("marketData is null");
+                throw new ArgumentNullException(nameof(marketData));
 
             if (openPosition.Position.Direction == "BUY") return (marketData.Bid - openPosition.Position.Level) * openPosition.Position.Size;
             else return (openPosition.Position.Level - marketData.Offer) * openPosition.Position.Size;
@@ -45,7 +45,7 @@ namespace IG.Csharp.Api.Client.Helper
         public static void CalculatePL(List<OpenPosition> positions, Streaming.Model.MarketData marketData)
         {
             if (positions == null)
-                throw new NullReferenceException("positions is null");
+                throw new ArgumentNullException(nameof(positions));
 
             positions.ForEach(position =>
             {
