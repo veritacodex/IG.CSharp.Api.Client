@@ -9,7 +9,7 @@ namespace Playground
 
     public class AuthenticationExample
     {
-        private IgRestApiClient _igRestApiClient;
+        private readonly IgRestApiClient _igRestApiClient;
 
         internal void Run()
         {

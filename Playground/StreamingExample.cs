@@ -13,7 +13,7 @@ namespace Playground
 
     public class StreamingExample
     {
-        private IgStreamingApiClient _streamingClient;
+        private readonly IgStreamingApiClient _streamingClient;
 
         public StreamingExample(){
 

@@ -10,7 +10,7 @@ namespace Playground
 
     public class DownloadDataExample
     {
-        private IgRestApiClient _igClient;
+        private readonly IgRestApiClient _igClient;
 
         public DownloadDataExample()
         {
