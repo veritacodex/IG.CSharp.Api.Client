@@ -149,9 +149,9 @@ namespace IG.Csharp.Api.Client.Rest
             var uri = $"{TRANSACTIONS_URI}?from={start:yyyy-MM-dd}";
             return GetApiResponse<TransactionsResponse>(uri, "2");
         }
-        public List<Transaction> GetTransactions(DateTime from, DateTime to, TransactionType transactionType)
+        public List<Transaction> GetTransactions(DateTime from, DateTime toEnd, TransactionType transactionType)
         {
-            var uri = $"{TRANSACTIONS_URI}?type={transactionType}&from={ParseDateToIgFormat(from)}&to={ParseDateToIgFormat(to)}";
+            var uri = $"{TRANSACTIONS_URI}?type={transactionType}&from={ParseDateToIgFormat(from)}&to={ParseDateToIgFormat(toEnd)}";
             var transactions = new List<Transaction>();
             return GetTransactions(transactions, uri, 1);
         }
@@ -235,10 +235,10 @@ namespace IG.Csharp.Api.Client.Rest
         public SearchMarketResponse SearchMarkets(string searchTem) =>
             GetApiResponse<SearchMarketResponse>($"{MARKETS_URI}?searchTerm={WebUtility.UrlEncode(searchTem)}", "1");
 
-        public List<Price> GetHistoricalPrices(string epic, Resolution resolution, DateTime from, DateTime to)
+        public List<Price> GetHistoricalPrices(string epic, Resolution resolution, DateTime from, DateTime toEnd)
         {
             var startDate = ParseDateToIgFormat(from);
-            var endDate = ParseDateToIgFormat(to);
+            var endDate = ParseDateToIgFormat(toEnd);
             var uri = $"{PRICES_URI}/{epic}?resolution={resolution}&from={startDate}&to={endDate}";
             var prices = new List<Price>();
 
@@ -257,9 +257,9 @@ namespace IG.Csharp.Api.Client.Rest
             }
             return prices;
         }
-        public void SaveHistoricalDataToFile(string epic, Resolution resolution, DateTime from, DateTime to, string filePathToSave)
+        public void SaveHistoricalDataToFile(string epic, Resolution resolution, DateTime from, DateTime toEnd, string filePathToSave)
         {
-            var prices = GetHistoricalPrices(epic, resolution, from, to);
+            var prices = GetHistoricalPrices(epic, resolution, from, toEnd);
 
             File.WriteAllLines(filePathToSave,
                 prices.Select(x =>
