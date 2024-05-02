@@ -1,8 +1,8 @@
 ﻿using com.lightstreamer.client;
 using IG.Csharp.Api.Client.Rest.Response;
 using IG.Csharp.Api.Client.Streaming.Listener;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace IG.Csharp.Api.Client.Streaming
@@ -17,7 +17,8 @@ namespace IG.Csharp.Api.Client.Streaming
 
         public IgStreamingApiClient(AuthenticationResponse authenticationResponse)
         {
-            Contract.Requires(authenticationResponse != null);
+            if (authenticationResponse == null)
+                throw new ArgumentNullException(nameof(authenticationResponse));
 
             _accountId = authenticationResponse.CurrentAccountId;
             _lsClient = new LightstreamerClient(authenticationResponse.LightstreamerEndpoint, "DEFAULT");
